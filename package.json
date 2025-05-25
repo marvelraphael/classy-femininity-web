@@ -10,7 +10,7 @@
     "next": "13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@polar-sh/nextjs": "^0.1.0",
+    "node-fetch": "^2.6.6",
     "pdfjs-dist": "^2.16.105"
   }
 }
