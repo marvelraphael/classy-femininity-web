@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+    res.setHeader('Allow','POST');
     return res.status(405).end('Method Not Allowed');
   }
 
@@ -12,12 +12,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing env vars' });
   }
 
-  // 1) Create a checkout session via Polar’s REST API
   const apiRes = await fetch('https://api.polar.sh/v1/checkout_sessions', {
     method: 'POST',
     headers: {
-      'Content-Type':  'application/json',
-      Authorization:   `Bearer ${POLAR_ACCESS_TOKEN}`,
+      'Content-Type': 'application/json',
+      Authorization:  `Bearer ${POLAR_ACCESS_TOKEN}`,
     },
     body: JSON.stringify({
       data: {
@@ -31,12 +30,11 @@ export default async function handler(req, res) {
   });
 
   if (!apiRes.ok) {
-    const text = await apiRes.text();
-    console.error('Polar error:', text);
-    return res.status(502).json({ error: 'Failed to create checkout' });
+    const errTxt = await apiRes.text();
+    console.error('Polar error:', errTxt);
+    return res.status(502).json({ error: 'Checkout creation failed' });
   }
 
   const { data } = await apiRes.json();
-  // 2) Respond with the hosted checkout URL
-  res.status(200).json({ url: data.attributes.url });
+  return res.status(200).json({ url: data.attributes.url });
 }
